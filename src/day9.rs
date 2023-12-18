@@ -1,16 +1,19 @@
 use std::collections::HashMap;
-use std::fs;
 
-fn main() {
-    let input = read_file_string("src/input.txt").unwrap();
-    let lines_vector = input.lines().collect::<Vec<_>>();
+pub fn answers(input: String) -> Vec<String> {
+    let lines = input.lines().collect::<Vec<_>>();
+    let results: Vec<String> = part1(&lines);
 
+    return results;
+}
+
+fn part1(lines: &Vec<&str>) -> Vec<String> {
     let mut total = 0;
     let mut reversed_total = 0;
 
     //part 1 and part2
     //part 2 solution is basically same but the input is reversed.
-    for line in lines_vector {
+    for line in lines {
         let mut splitted_line = line
             .split(" ")
             .filter(|&x| x != "")
@@ -67,11 +70,6 @@ fn main() {
             }
         }
     }
-    println!("Total: {total} (part1)");
-    println!("Total: {reversed_total} (part2)");
-}
 
-fn read_file_string(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let data = fs::read_to_string(filepath)?;
-    Ok(data)
+    return vec![total.to_string(), reversed_total.to_string()]
 }

@@ -1,17 +1,18 @@
-use std::fs;
 use std::collections::HashMap;
 
-fn main() {
-    let input = read_file_string("src/input.txt").unwrap();
-    let lines_vector = input.lines().collect::<Vec<_>>();
+pub fn answers(input: String) -> Vec<String> {
+    let lines = input.lines().collect::<Vec<_>>();
+    let results: Vec<String> = part1_and_2(&lines);
 
-    //part1
+    return results;
+}
 
-    let instructions = lines_vector[0].chars().collect::<Vec<char>>();
+fn part1_and_2(lines: &Vec<&str>) -> Vec<String> {
+    let instructions = lines[0].chars().collect::<Vec<char>>();
 
     let mut map: HashMap<&str, (&str, &str)> = HashMap::new();
 
-    for line in lines_vector[2..].iter() {
+    for line in lines[2..].iter() {
         let splitted_line = line.split(&['=', ',', '(', ')', ' ']).filter(|&x| x != "").collect::<Vec<&str>>();
         map.insert(splitted_line[0], (splitted_line[1], splitted_line[2]));
     }
@@ -32,7 +33,7 @@ fn main() {
         }
     }
 
-    println!("total steps: {total_steps} (part1)");
+    let part1_answer = total_steps;
 
     //part2
     let mut starting_locs: Vec<&str> = Vec::new();
@@ -64,10 +65,7 @@ fn main() {
         }
     }
 
-    println!("Get the lowest common multiple of those numbers from a random website: {:?}", least_steps);
-}
+    println!("DAY8 NOTE: Get the lowest common multiple of those numbers from a random website: {:?}", least_steps);
 
-fn read_file_string(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let data = fs::read_to_string(filepath)?;
-    Ok(data)
+    return vec![part1_answer.to_string(), "Calculate LCM".to_string()]
 }

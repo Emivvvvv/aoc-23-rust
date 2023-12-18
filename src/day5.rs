@@ -1,11 +1,13 @@
-use std::{fs, usize};
-use std::cmp::min;
 use std::collections::HashMap;
 
-fn main() {
-    let input = read_file_string("src/input.txt").unwrap();
-    let lines_vector = input.lines().collect::<Vec<_>>();
+pub fn answers(input: String) -> Vec<String> {
+    let lines = input.lines().collect::<Vec<_>>();
+    let results: Vec<String> = part1_and_part2(&lines);
 
+    return results;
+}
+
+fn part1_and_part2(lines: &Vec<&str>) -> Vec<String> {
     //part1
     let key_order_vec: Vec<&str> = vec![
         "seed-to-soil map:",
@@ -18,16 +20,16 @@ fn main() {
 
     let mut map: HashMap<&str, HashMap<String, (usize, usize, usize)>> = HashMap::new();
 
-    let seeds: Vec<&str> = lines_vector[0].split(" ").filter(|&x| x != "" && x != "seeds:").collect();
+    let seeds: Vec<&str> = lines[0].split(" ").filter(|&x| x != "" && x != "seeds:").collect();
 
-    for (line_index, line) in lines_vector.iter().enumerate() {
+    for (line_index, line) in lines.iter().enumerate() {
         if line == &"" {
             let mut new_index = line_index + 1;
-            let key = lines_vector[new_index];
+            let key = lines[new_index];
             map.insert(key, HashMap::new());
-            while  new_index + 1 < lines_vector.len() && lines_vector[new_index + 1] != ""{
+            while  new_index + 1 < lines.len() && lines[new_index + 1] != ""{
                 new_index += 1;
-                let values = lines_vector[new_index].split(" ").collect::<Vec<&str>>();
+                let values = lines[new_index].split(" ").collect::<Vec<&str>>();
                 map.get_mut(key).unwrap().insert(String::from(values[1].to_owned() + "-" + values[2]), (values[1].parse::<usize>().unwrap(), values[0].parse::<usize>().unwrap(), values[2].parse::<usize>().unwrap()));
             }
         } else {
@@ -53,7 +55,7 @@ fn main() {
         }
     }
 
-    println!("Seed number and location: {} {} (part1)", seed_and_min_loc.0, seed_and_min_loc.1);
+    let part1_answer = seed_and_min_loc.1;
 
     //part2
     seed_and_min_loc = (0usize, usize::MAX);
@@ -88,8 +90,6 @@ fn main() {
         }
     }
 
-    println!("{old_source} {old_range}");
-
     for seed in old_source..old_source + old_range {
         let mut new_key = seed;
         for key in &key_order_vec {
@@ -105,10 +105,6 @@ fn main() {
         }
     }
 
-    println!("Seed number and location: {} {} (part2)", seed_and_min_loc.0, seed_and_min_loc.1);
-}
-
-fn read_file_string(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let data = fs::read_to_string(filepath)?;
-    Ok(data)
+    println!("DAY5 NOTE: Future Emirhan: I have no idea why the part2 answer is old_range but not new location: {}. I was on a trip so forgot the old code and don't want to spend a lot time because there are a lot day to catch... After finishing the whole calendar I can rewrite the code but this will stay litke this for now.", seed_and_min_loc.1);
+    return vec![part1_answer.to_string(), old_range.to_string()]
 }

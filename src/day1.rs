@@ -1,13 +1,14 @@
-use std::fs;
+pub fn answers(input: String) -> Vec<String> {
+    let lines = input.lines().collect::<Vec<_>>();
+    let results: Vec<String> = vec![part1(&lines), part2(&lines)];
 
-fn main() {
-    let input = read_file_string("src/input.txt").unwrap();
-    let lines_vector = input.lines().collect::<Vec<_>>();
+    return results;
+}
 
+fn part1(lines: &Vec<&str>) -> String {
     let mut total: u32 = 0;
 
-    //part1
-    for line in &lines_vector {
+    for line in lines {
         let line_nums: Vec<u32> = line
             .chars()
             .filter(|x| x.is_numeric())
@@ -17,11 +18,12 @@ fn main() {
         total += line_nums.first().unwrap_or(&0) * 10 + line_nums.last().unwrap_or(&0);
     }
 
-    println!("Total: {total} (part1)");
+    return total.to_string()
+}
 
-    //part2
-    total = 0;
-    for line in &lines_vector {
+fn part2(lines: &Vec<&str>) -> String {
+    let mut total = 0;
+    for line in lines {
 
         let line_vec: Vec<char> = line.chars().collect();
 
@@ -62,13 +64,8 @@ fn main() {
 
         total +=
             edited_only_nums.first().unwrap().to_digit(10).unwrap() * 10 +
-            edited_only_nums.last().unwrap().to_digit(10).unwrap()
+                edited_only_nums.last().unwrap().to_digit(10).unwrap()
     }
 
-    println!("Total: {total} (part2)");
-}
-
-fn read_file_string(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let data = fs::read_to_string(filepath)?;
-    Ok(data)
+    return total.to_string()
 }

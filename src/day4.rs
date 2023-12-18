@@ -1,13 +1,15 @@
-use std::fs;
 use std::collections::HashMap;
 
-fn main() {
-    let input = read_file_string("src/input.txt").unwrap();
-    let lines_vector = input.lines().collect::<Vec<_>>();
+pub fn answers(input: String) -> Vec<String> {
+    let lines = input.lines().collect::<Vec<_>>();
+    let results: Vec<String> = vec![part1(&lines), part2(&lines)];
 
+    return results;
+}
 
+fn part1(lines: &Vec<&str>) -> String {
     let mut total = 0;
-    for card in &lines_vector {
+    for card in lines {
         let splitted: Vec<&str> = card.split(" ").filter(|&x| x != "" && x != "Card" && !x.contains(':')).collect();
         let seperator_index = splitted.iter().position(|&x|x == "|").unwrap();
         let winning_nums: &[&str] = &splitted[..seperator_index].to_vec();
@@ -23,14 +25,15 @@ fn main() {
         }
     }
 
-    println!("Total: {total} (part1)");
+    return total.to_string()
+}
 
-    //part2
-    total = 0;
+fn part2(lines: &Vec<&str>) -> String {
+    let mut total = 0;
 
     let mut scratchcards: HashMap<usize, (usize, usize),> = HashMap::new();
 
-    for card in lines_vector {
+    for card in lines {
         let splitted: Vec<&str> = card.split(" ").filter(|&x| x != "" && x != "Card").collect();
         let seperator_index = splitted.iter().position(|&x| x == "|").unwrap();
         let winning_nums: &[&str] = &splitted[1..seperator_index].to_vec();
@@ -53,11 +56,5 @@ fn main() {
         total += card_count as i32;
     }
 
-
-        println!("Total: {total} (part2)");
-}
-
-fn read_file_string(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let data = fs::read_to_string(filepath)?;
-    Ok(data)
+    return total.to_string()
 }

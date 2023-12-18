@@ -1,46 +1,46 @@
-use std::fs;
+pub fn answers(input: String) -> Vec<String> {
+    let lines = input.lines().collect::<Vec<_>>();
+    let results: Vec<String> = vec![part1(&lines), part2(&lines)];
 
-fn main() {
-    let input = read_file_string("src/input.txt").unwrap();
-    let lines_vector = input.lines().collect::<Vec<_>>();
+    return results;
+}
 
-    #[derive(Debug, PartialEq, PartialOrd)]
-    enum Type {
-        FiveOfAKind,
-        FourOfAKind,
-        FullHouse,
-        ThreeOfAKind,
-        TwoPair,
-        OnePair,
-        HighCard,
-    }
+#[derive(Debug, PartialEq, PartialOrd)]
+enum Type {
+    FiveOfAKind,
+    FourOfAKind,
+    FullHouse,
+    ThreeOfAKind,
+    TwoPair,
+    OnePair,
+    HighCard,
+}
 
-    #[derive(Debug)]
-    struct Hand {
-        cards: String,
-        card_type: Type,
-        bid: usize,
-        rank: Option<usize>
-    }
+#[derive(Debug)]
+struct Hand {
+    cards: String,
+    card_type: Type,
+    bid: usize,
+    rank: Option<usize>
+}
 
-    impl Hand {
-        fn new(cards: String, card_type: Type, bid: usize) -> Self {
-            Hand {
-                cards,
-                card_type,
-                bid,
-                rank: None,
-            }
+impl Hand {
+    fn new(cards: String, card_type: Type, bid: usize) -> Self {
+        Hand {
+            cards,
+            card_type,
+            bid,
+            rank: None,
         }
     }
+}
 
-
-    //part1
+fn part1(lines: &Vec<&str>) -> String {
     let mut hands: Vec<Hand> = Vec::new();
     let mut total = 0;
     let card_strength = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 
-    for line in &lines_vector {
+    for line in lines {
         let line_splitted: Vec<&str> = line.split(" ").collect();
 
         let mut total = 0usize;
@@ -87,16 +87,16 @@ fn main() {
         total += hands[i].rank.unwrap() * hands[i].bid
     }
 
-    println!("Total: {:?} (part1)", total);
+    return total.to_string()
+}
 
-    //part2
-
+fn part2(lines: &Vec<&str>) -> String {
     let card_strength = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'];
 
     let mut hands: Vec<Hand> = Vec::new();
     let mut total = 0;
 
-    for line in &lines_vector {
+    for line in lines {
         let line_splitted: Vec<&str> = line.split(" ").collect();
 
         let mut total = 0usize;
@@ -161,10 +161,6 @@ fn main() {
         hands[i].rank = Some(rank);
         total += hands[i].rank.unwrap() * hands[i].bid
     }
-    println!("Total: {:?} (part2)", total);
-}
 
-fn read_file_string(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let data = fs::read_to_string(filepath)?;
-    Ok(data)
+    return total.to_string()
 }

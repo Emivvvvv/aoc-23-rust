@@ -1,19 +1,18 @@
-use std::fs;
+pub fn answers(input: String) -> Vec<String> {
+    let lines = input.lines().collect::<Vec<_>>();
+    let results: Vec<String> = vec![part1(&lines), part2(&lines)];
 
-fn main() {
-    let input = read_file_string("src/input.txt").unwrap();
-    let lines_vector = input.lines().collect::<Vec<_>>();
+    return results;
+}
 
-    let times = lines_vector[0]
+fn part1(lines: &Vec<&str>) -> String {
+    let times = lines[0]
         .split(" ")
         .filter(|&x| x != "" && x!= "Time:")
         .collect::<Vec<&str>>();
-    let distances = lines_vector[1]
+    let distances = lines[1]
         .split(" ")
         .filter(|&x| x != "" && x!= "Distance:").collect::<Vec<&str>>();
-
-
-    //part1
 
     let mut multiplied_num_ways = 1;
 
@@ -29,9 +28,18 @@ fn main() {
         multiplied_num_ways *= num_ways
     }
 
-    println!("part1: {multiplied_num_ways}");
+    return multiplied_num_ways.to_string()
+}
 
-    //part2
+fn part2(lines: &Vec<&str>) -> String {
+    let times = lines[0]
+        .split(" ")
+        .filter(|&x| x != "" && x!= "Time:")
+        .collect::<Vec<&str>>();
+    let distances = lines[1]
+        .split(" ")
+        .filter(|&x| x != "" && x!= "Distance:").collect::<Vec<&str>>();
+
     let mut num_ways = 0;
 
     let time_2 = times.join("").parse::<usize>().unwrap();
@@ -42,10 +50,5 @@ fn main() {
         }
     }
 
-    println!("part2: {num_ways}");
-}
-
-fn read_file_string(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let data = fs::read_to_string(filepath)?;
-    Ok(data)
+    return num_ways.to_string()
 }

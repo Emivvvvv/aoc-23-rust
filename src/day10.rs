@@ -1,16 +1,19 @@
-use std::fs;
 use std::collections::HashMap;
 
-fn main() {
-    let input = read_file_string("src/input.txt").unwrap();
-    let lines_vector = input.lines().collect::<Vec<_>>();
+pub fn answers(input: String) -> Vec<String> {
+    let lines = input.lines().collect::<Vec<_>>();
+    let results: Vec<String> = part1_and_2(&lines);
 
+    return results;
+}
+
+fn part1_and_2(lines: &Vec<&str>) -> Vec<String> {
     let mut map: HashMap<usize, HashMap<usize, (char, bool)>> = HashMap::new();
 
     let mut s_x = 0;
     let mut s_y = 0;
 
-    for (i, line) in lines_vector.iter().enumerate() {
+    for (i, line) in lines.iter().enumerate() {
         let mut line_map: HashMap<usize, (char, bool)> = HashMap::new();
         for (j, char) in line.chars().collect::<Vec<char>>().iter().enumerate() {
             line_map.insert(j, (*char, false));
@@ -45,7 +48,7 @@ fn main() {
             _ => {},
         }
     }
-    if s_x != lines_vector[0].len() - 1 {
+    if s_x != lines[0].len() - 1 {
         match map[&s_y][&(s_x + 1)].0 {
             '-' | 'J' | '7' => {
                 new_x = s_x + 1;
@@ -55,7 +58,7 @@ fn main() {
             _ => {},
         }
     }
-    if s_y != lines_vector.len() - 1 {
+    if s_y != lines.len() - 1 {
         match map[&(s_y + 1)][&s_x].0 {
             '|' | 'J' | 'L' => {
                 new_x = s_x;
@@ -75,8 +78,6 @@ fn main() {
             _ => {},
         }
     }
-
-    println!("{:?}", find_s_vec);
 
     let s_pipe: char = if find_s_vec[0] == 0 {
         if find_s_vec[1] == 1 {
@@ -102,7 +103,6 @@ fn main() {
         panic!()
     };
 
-    println!("{s_pipe}");
 
     let mut length_of_pipes = 1;
 
@@ -159,8 +159,6 @@ fn main() {
         length_of_pipes += 1;
     }
 
-    println!("Part1: {}", length_of_pipes/2);
-
     //part2
     let mut enclosed_count = 0;
     let mut flag;
@@ -176,15 +174,10 @@ fn main() {
             }
 
             if !used_pipe && flag {
-                println!("{:?}, x:{x}", line);
                 enclosed_count += 1;
             }
         }
     }
-    println!("Enclosed: {enclosed_count} (part2)")
-}
 
-fn read_file_string(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let data = fs::read_to_string(filepath)?;
-    Ok(data)
+    return vec![(length_of_pipes/2).to_string(), enclosed_count.to_string()]
 }

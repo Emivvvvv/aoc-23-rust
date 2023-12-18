@@ -1,13 +1,14 @@
-use std::fs;
+pub fn answers(input: String) -> Vec<String> {
+    let lines = input.lines().collect::<Vec<_>>();
+    let results: Vec<String> = vec![part1(&lines), part2(&lines)];
 
-fn main() {
-    let input = read_file_string("src/input.txt").unwrap();
-    let lines_vector = input.lines().collect::<Vec<_>>();
+    return results;
+}
 
+fn part1(lines: &Vec<&str>) -> String {
     let mut total = 0;
 
-    //part1
-    for game in &lines_vector {
+    for game in lines {
         let hands: Vec<&str> = game
             .split(&[':',';']).collect();
         let mut hands_detailed = hands
@@ -33,11 +34,13 @@ fn main() {
         }
     }
 
-    println!("Total {total} (part1)");
+    return total.to_string()
+}
 
-    //part2
-    total = 0;
-    for game in &lines_vector {
+fn part2(lines: &Vec<&str>) -> String {
+    let mut total = 0;
+
+    for game in lines {
         let hands: Vec<&str> = game
             .split(&[':',';']).collect();
         let mut hands_detailed = hands
@@ -66,10 +69,5 @@ fn main() {
         total += red * green * blue
     }
 
-    println!("Total {total} (part2)");
-}
-
-fn read_file_string(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let data = fs::read_to_string(filepath)?;
-    Ok(data)
+    return total.to_string()
 }

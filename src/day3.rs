@@ -1,21 +1,22 @@
-use std::fs;
 use std::collections::HashMap;
-use std::ops::Index;
 
-fn main() {
-    let input = read_file_string("src/input.txt").unwrap();
-    let lines_vector = input.lines().collect::<Vec<_>>();
+pub fn answers(input: String) -> Vec<String> {
+    let lines = input.lines().collect::<Vec<_>>();
+    let results: Vec<String> = part1_and_2(&lines);
 
-    //part1
+    return results;
+}
+
+fn part1_and_2(lines: &Vec<&str>) -> Vec<String> {
     let mut total = 0;
     let mut flag;
-    let line_count = lines_vector.len();
-    let line_length = lines_vector[0].len();
+    let line_count = lines.len();
+    let line_length = lines[0].len();
 
     let mut row_index_number: Vec<(usize, usize, &str)> = Vec::new();
-    for i in 0..lines_vector.len() {
-        let edited_line = ".".to_owned() + lines_vector[i] + ".";
-        let splitted_numbers: Vec<&str> = lines_vector[i]
+    for i in 0..lines.len() {
+        let edited_line = ".".to_owned() + lines[i] + ".";
+        let splitted_numbers: Vec<&str> = lines[i]
             .split(&['.', '+', '=', '@', '#', '-', '*', '/' , '\\', '&', '$', '%'])
             .filter(|&x| x != "").collect();
 
@@ -48,7 +49,7 @@ fn main() {
                 if c == 0 && index == &0usize || c == len + 1 && index == &(line_length - len) {
                     continue
                 }
-                if (lines_vector[row + r - 1].as_bytes()[index + c - 1] as char).to_string().contains(&['+', '=', '@', '#', '-', '*', '/' , '\\', '&', '$', '%']) {
+                if (lines[row + r - 1].as_bytes()[index + c - 1] as char).to_string().contains(&['+', '=', '@', '#', '-', '*', '/' , '\\', '&', '$', '%']) {
                     flag = true;
                 }
             }
@@ -59,15 +60,14 @@ fn main() {
         }
     }
 
-    println!("Total: {total} (part1)");
 
     //part2
-    total = 0;
+    let mut total2 = 0;
     let mut stars_row_index: HashMap<(usize, usize), Vec<usize>> = HashMap::new();
 
 
-    for i in 0..lines_vector.len() {
-        let all_occurrence: Vec<(usize, &str)> = lines_vector[i].match_indices('*').collect();
+    for i in 0..lines.len() {
+        let all_occurrence: Vec<(usize, &str)> = lines[i].match_indices('*').collect();
         for occurrence in all_occurrence {
             stars_row_index.insert((i, occurrence.0), vec![]);
         }
@@ -87,11 +87,10 @@ fn main() {
                 if c == 0 && index == &0usize || c == len + 1 && index == &(line_length - len) {
                     continue
                 }
-                if (lines_vector[row + r - 1].as_bytes()[index + c - 1] as char).to_string().contains(&['*']) {
+                if (lines[row + r - 1].as_bytes()[index + c - 1] as char).to_string().contains(&['*']) {
                     star_row = row + r - 1;
                     star_index = index + c - 1;
                     stars_row_index.get_mut(&(star_row, star_index)).unwrap().push(number.parse::<usize>().unwrap());
-                    println!("star found!")
                 }
             }
         }
@@ -105,13 +104,9 @@ fn main() {
             values.iter().for_each(|x| gear_value *= x );
         }
 
-        total += gear_value as i32;
+        total2 += gear_value as i32;
     }
 
-    println!("Total: {total} (part2)");
-}
 
-fn read_file_string(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let data = fs::read_to_string(filepath)?;
-    Ok(data)
+    return vec![total.to_string(), total2.to_string()]
 }
